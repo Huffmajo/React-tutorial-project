@@ -21,23 +21,19 @@ class Board extends React.Component {
   }
 
   render() {
+  	const numRows = 3;
+  	const numCols = 3;
+
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+      	{[...new Array(numRows)].map((x, rowIndex) => {
+      		return (
+      			<div className="board-row" key={rowIndex}>
+      				{[...new Array(numCols)].map((y, colIndex) => this.renderSquare(rowIndex * numCols + colIndex) )}
+      			</div>
+      		)
+      	})
+      	}
       </div>
     );
   }
@@ -98,6 +94,8 @@ class Game extends React.Component {
   	let status;
   	if (winner) {
   		status = 'Winner: ' + winner;
+  	} else if (checkDraw(current.squares)) {
+  		status = 'Draw game'
   	} else {
   		status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
   	}
@@ -117,6 +115,18 @@ class Game extends React.Component {
       </div>
     );
   }
+}
+
+function checkDraw(squares)
+{
+	for (let i = 0; i < squares.length - 1; i ++)
+	{
+		if (squares[i] == null)
+		{
+			return false
+		}
+	}
+	return true
 }
 
 function calculateWinner(squares) {
